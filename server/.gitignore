@@ -1,0 +1,13 @@
+# dependency directory
+/node_modules
+
+# environment file
+.env
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Lock file
+package-lock.json

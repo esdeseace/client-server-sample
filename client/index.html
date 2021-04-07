@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sample</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Patrick Hand"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: Patrick Hand;
+      }
+
+      .container {
+        margin-left: 64px;
+        margin-right: 64px;
+        display: flex;
+        flex-direction: column;
+        min-height: 90vh;
+      }
+
+      .options {
+        flex: none;
+        display: flex;
+        margin: 16px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      #code-type {
+        margin-left: 16px;
+      }
+
+      .code {
+        flex-grow: 3;
+        margin-bottom: 32px;
+      }
+
+      .result {
+        flex-grow: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      const API_URL = "http://localhost:1234/api";
+
+      function onRunCode() {
+        const type = document.getElementById("code-type").value;
+        const code = document.getElementById("code").value;
+        const button = document.getElementById("btn");
+        button.value = "Loading";
+        button.disabled = true;
+
+        fetch(`${API_URL}/code`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ code, type }),
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res);
+            if (!res.success) {
+              alert(res.message);
+            } else {
+              const result = document.getElementById("result");
+              result.value = res.data;
+            }
+          })
+          .catch((res) => {
+            console.log(res);
+          })
+          .finally(() => {
+            button.value = "Run code";
+            button.disabled = false;
+          });
+      }
+    </script>
+
+    <div class="container">
+      <div class="options">
+        <div>
+          <label for="code-type">Code type:</label>
+
+          <select id="code-type">
+            <option value="Python">Python</option>
+            <option value="C++">C++</option>
+          </select>
+        </div>
+
+        <div>
+          <button id="btn" onclick="onRunCode()">Run code</button>
+        </div>
+      </div>
+
+      <textarea id="code" class="code"> </textarea>
+
+      <textarea disabled id="result" class="result"></textarea>
+    </div>
+  </body>
+</html>
